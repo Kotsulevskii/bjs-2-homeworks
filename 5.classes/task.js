@@ -14,6 +14,8 @@ class PrintEditionItem {
             this._state = 0;
           } else  if (printControl > 100) {
             this._state = 100;
+        } else {
+            printControl = this._state;
         }
     }
     get state() {
@@ -75,7 +77,8 @@ class Library {
     giveBookByName(bookName) {
         let index = this.books.indexOf(this.findBookBy("name", bookName))
         if (index != -1) {  
-            return this.books.splice(index, 1);
+            let bookByName = this.books.splice(index, 1);
+            return bookByName[0];
         }
         return null;
         } 
