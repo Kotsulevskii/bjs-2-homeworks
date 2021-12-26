@@ -7,54 +7,51 @@
     if (idx !== -1) { // если элемент не найден
       console.log("Из кэша: " + cache[idx].value); // индекс нам известен, по индексу в массиве лежит объект, как получить нужное значение?
       return "Из кэша: " + cache[idx].value;
-    } else {
+    } 
       let result = func(...args); // в кэше результата нет - придётся считать
       cache.push({hash: hash, value: result}) ; // добавляем элемент с правильной структурой
           if (cache.length > 5) { 
             cache.shift(); // если слишком много элементов в кэше надо удалить самый старый (первый) 
           }
           console.log("Вычисляем: " + result);
-          return "Вычисляем: " + result;  
-      }
+          return "Вычисляем: " + result;   
   }
   return wrapper;
 }
 
   function debounceDecoratorNew(func, ms) {
-  / let isThrottled = false,       
-    / savedArgs,
-      savedThis;
-    return function(...args) {
-      savedArgs = args;     
-      savedThis = this;
+    let isThrottled = false;
+    let timeout;
+    return function (...args) {
       if (isThrottled) {
         return;       
-      }       
-        func.apply(this, savedArgs);   
+      }   
+      clearTimeout(timeout);
+        func.apply(this, args);   
          isThrottled = true;
-      setTimeout(() => {
+      timeout = setTimeout(() => {
           isThrottled = false;         
-        func.apply(savedThis, savedArgs);
+        func.apply(this, args);
       }, ms);
       };
     }
 
 function debounceDecoratorNew(func, ms) {
-   let isThrottled = false,       
-      savedArgs,
-    savedThis;
-  let count;
-    return function(...args) {
-      savedArgs = args;     
-      savedThis = this;
+  let isThrottled = false;      
+  let timeout; 
+  debounceFunc.count = 0;
+    return function debounceFunc(...args) {
+     
       if (isThrottled) {
         return;       
-      }       
-        func.apply(this, savedArgs);   
+      }  
+       debounceFunc.count++;
+       clearTimeout(timeout);
+        func.apply(this, args);   
          isThrottled = true;
-      setTimeout(() => {
+     timeout = setTimeout(() => {
           isThrottled = false;         
-        func.apply(savedThis, savedArgs);
-      }, ms); count++;
-      };
+        func.apply(this, args);
+      }, ms);
+  };
     }
